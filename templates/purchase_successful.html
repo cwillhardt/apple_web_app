@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block head %}
+{% endblock %}
+{% block content %}
+  <div>
+	<h1> Purchase Successful! </h1>
+    <table class="styled-table">
+	<tr>
+	  <th scope="col">Model ID</th>
+      <th scope="col">Name</th>
+	  <th scope="col">Configuration Specifics</th>
+	  <th scope="col">Price</th>
+	</tr>
+    {% for row in results %}
+      <tr>
+         <td>{{ row[0] }}</td>
+         <td>{{ row[1] }}</td>
+		 <td>{{ row[3] }}</td>
+		 <td>${{ row[2] }}</td>
+      </tr>
+    {% endfor %}
+	</table>
+  </div>
+	
+{% endblock %}

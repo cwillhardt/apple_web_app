@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block head %}
+{% endblock %}
+{% block content %}
+  <p class="important">
+    <table class="styled-table">
+	<tr>
+	  <th scope="col">Model ID</th>
+      <th scope="col">Name</th>
+	  <th scope="col">Storage, Color</th>
+	  <th scope="col">Price</th>
+      <th scope="col"></th>
+	</tr>
+    {% for row in results %}
+      <tr>
+         <td>{{ row[0] }}</td>
+         <td>{{ row[1] }}</td>
+		 <td>{{ row[3] }}</td>
+		 <td>${{ row[2] }}</td>
+		 <td>
+		   <form action="{{ url_for('add_to_cart') }}" method="POST">
+             <input id="model_id" name="model_id" type="hidden" value="{{row[0]}}">
+             <button type="submit" name='addtocart' value="{{ row[0] }}" formmethod="post"> Add To Cart </button>
+           </form>
+		 </td>
+      </tr>
+    {% endfor %}
+	</table>
+{% endblock %}

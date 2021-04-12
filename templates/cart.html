@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block head %}
+{% endblock %}
+{% block content %}
+  <div>
+    <table class="styled-table">
+	<tr>
+	  <th scope="col">Model ID</th>
+      <th scope="col">Name</th>
+	  <th scope="col">Configuration Specifics</th>
+	  <th scope="col">Price</th>
+      <th scope="col"></th>
+	</tr>
+    {% for row in results %}
+      <tr>
+         <td>{{ row[0] }}</td>
+         <td>{{ row[1] }}</td>
+		 <td>{{ row[3] }}</td>
+		 <td>${{ row[2] }}</td>
+		 <td>
+		   <form action="{{ url_for('remove_from_cart') }}" method="POST">
+             <input id="model_id" name="model_id" type="hidden" value="{{row[0]}}">
+             <button type="submit" name='removefromcart' value="{{ row[0] }}" formmethod="post"> Remove </button>
+           </form>
+		 </td>
+      </tr>
+    {% endfor %}
+	</table>
+  <form action="{{ url_for('clear_cart') }}" method="POST">
+    <button type="submit"> Clear Cart </button>
+  </form>
+  <form action="{{ url_for('purchase_cart') }}" method="POST">
+    <p> Apple Account Name: </p>
+    <input type="text" name="account_name">
+    <button type="submit"> Purchase Cart </button>
+  </form>
+  </div>
+	
+{% endblock %}

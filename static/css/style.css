@@ -1,0 +1,52 @@
+  body {
+    margin: 0;
+  }
+
+  nav {
+    top: 0;
+	left: 0;
+	right: 0;
+    height: 44px;
+    background: #323232;
+	overflow: hidden;
+  }
+
+  nav ul {
+    display: flex;
+    height: 44px;
+    justify-content: space-around;
+    align-items: center;
+    padding: 0;
+    margin: 0 auto;
+    list-style-type: none;
+	overflow: hidden;
+  }
+
+  nav li {}
+
+  nav a {
+    display: block;
+    color: lightgray;
+    font-size: 15px;
+    font-weight: lighter;
+    font-family: Arial;
+    text-decoration: none;
+    transition: 0.3s;
+  }
+
+  nav a:hover {
+    color: #B8B8B8;
+  }
+
+  .wrapper {
+    top: 0px;
+	margin: 0px;
+	min-height: 100vh;
+  }
+  .appleNav {
+    max-width: 980px;
+	max-height: 42px;
+    margin: 0 auto;
+	overflow: hidden;
+  }
+  
