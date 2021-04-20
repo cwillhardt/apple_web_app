@@ -61,6 +61,7 @@
   .styled-footer{
     margin-left: 50px;
 	margin-bottom: 15px;
+	margin-top: 90px;
   }
   .styled-table {
     border-collapse: collapse;
@@ -103,9 +104,7 @@
           <!--<li><a href="/Apps">Apps</a></li>
           <li><a href="/Music">Music</a></li>-->
           <li><a href="/Other">Other</a></li>
-          <!--<li>
             <a href="#"><img src="{{url_for('static', filename='search.png')}}" height="20"></a>
-          </li>-->
           <li>
 		    <a href="/Cart"><img src="{{url_for('static', filename='cart1.png')}}" height="20"></a>
 		  </li>
@@ -118,7 +117,7 @@
   </div>
   <footer id="footer" class="styled-footer">
     {% block footer %}
-    <a>&copy; Enterprise Database Project<br>Coded by Colton Willhardt<br>COMP 310 Database Theory and Design 2021</a>
+    <a>&copy; Enterprise Database Project<br>Coded by Colton Willhardt & Jacob Mclaughlin<br>COMP 310 Database Theory and Design 2021</a>
     {% endblock %}
   </footer>
 </body>

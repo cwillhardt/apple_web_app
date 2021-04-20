@@ -3,5 +3,32 @@
 {% endblock %}
 {% block content %}
   <p class="important">
-    Home
+    <div>
+	<center>
+	  <h1>
+	    iPhone
+	  </h1>
+	  <p>
+	    The new iPhone
+	  </p>
+	  <a href="/iPhone">
+	    iPhone >
+	  </a>
+	  <div>
+	    <img src="{{url_for('static', filename='iPhone-white.jpg')}}" height="300">
+	  </div>
+	  <h1>
+	    Apple Watch
+	  </h1>
+	  <p>
+	    The new Apple Watch
+	  </p>
+	  <a href="/Watch">
+	    Apple Watch >
+	  </a>
+	  <div>
+	    <img src="{{url_for('static', filename='watch.jpg')}}" height="300">
+	  </div>
+	</center>
+	</div>
 {% endblock %}
