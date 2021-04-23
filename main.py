@@ -157,6 +157,11 @@ def purchase_cart():
     else:
         return render_template('cart.html')
 
+@app.route('/Search')
+def search():
+    return render_template('search.html')
+    
+
 def get_cart():
     cursor = db.cursor()
     sql = "SELECT model_id,name,price, group_concat(configuration_specific) "\
