@@ -30,7 +30,16 @@
     <button type="submit"> Clear Cart </button>
   </form>
   <form action="{{ url_for('purchase_cart') }}" method="POST">
-    <p> Apple Account Name: </p>
+    <h2> Apple Account Checkout: </h2>
+	<p> Account Name </p>
+    <input type="text" name="account_name">
+    <button type="submit"> Purchase Cart </button>
+  </form>
+  <form action="{{ url_for('purchase_cart_guest') }}" method="POST">
+    <h2> Guest Checkout: </h2>
+	<p> Email </p>
+    <input type="text" name="account_name">
+	<p> Address </p>
     <input type="text" name="account_name">
     <button type="submit"> Purchase Cart </button>
   </form>

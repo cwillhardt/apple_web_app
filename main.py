@@ -157,10 +157,61 @@ def purchase_cart():
     else:
         return render_template('cart.html')
 
+@app.route('/purchase_cart_guest',methods=['POST'])
+def purchase_cart_guest():
+    if 'cart' in session and len(session['cart'])>0:
+        name = str(request.form['account_name'])
+        print("name: "+name)
+        cursor = db.cursor()
+        # insert into checkout
+        today = date.today()
+        today = today.strftime('%Y-%m-%d %H')
+        sql = "INSERT INTO checkout(date,payment_method,store_id,apple_id) "\
+              "VALUES ('"+today+"','Bitcoin',1,"+'NULL'+")"
+        cursor.execute(sql)
+        db.commit()
+    
+        # get the checkout id
+        sql = "SELECT checkout_id FROM checkout"\
+              " ORDER BY checkout_id DESC LIMIT 1"
+        cursor.execute(sql)
+        checkout_id = cursor.fetchone()[0]
+        print(checkout_id)
+    
+        # insert models into product_purchases
+        for model in session['cart']:
+            # get the current cost
+            sql = "SELECT price FROM stock WHERE store_id=1 AND model_id="+str(model)
+            cursor.execute(sql)
+            cost = cursor.fetchone()[0]
+            sql = "INSERT INTO product_purchases(model_id,checkout_id,cost)"\
+                  " VALUES("+str(model)+","+str(checkout_id)+","+str(cost)+")"
+            cursor.execute(sql)
+            db.commit()
+        models=get_cart()
+        session.pop('cart',None)
+        return render_template('purchase_successful.html',results=models)
+    else:
+        return render_template('cart.html')
+
 @app.route('/Search')
 def search():
     return render_template('search.html')
     
+@app.route('/Search_result',methods=['POST'])
+def search_result():
+    cursor = db.cursor()
+    sql = "SELECT * FROM (SELECT model_id,CONCAT(name,' ',group_concat(configuration_specific))"\
+          " as name,price FROM model_configurations NATURAL LEFT OUTER JOIN stock NATURAL LEFT OUTER"\
+          " JOIN model NATURAL LEFT OUTER JOIN product WHERE store_id=1 GROUP BY model_id UNION"\
+          " SELECT model_id,name,price FROM stock NATURAL LEFT OUTER JOIN model NATURAL LEFT OUTER"\
+          " JOIN product NATURAL LEFT OUTER JOIN configurables WHERE store_id=1 AND configuration_id"\
+          " is NULL GROUP BY model_id ORDER BY model_id) as x WHERE name like"
+    search_text = str(request.form['search'])
+    sql = sql + " '%" + search_text + "%'"
+    cursor.execute(sql)
+    results = cursor.fetchall()
+    return render_template('search_result.html',results = results)
 
 def get_cart():
     cursor = db.cursor()

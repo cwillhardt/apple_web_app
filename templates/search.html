@@ -2,8 +2,8 @@
 {% block head %}
 {% endblock %}
 {% block content %}
- <form><p>Search
-     <input type = "text">
+ <form action="{{ url_for('search_result') }}" method="POST"><p>Search
+     <input type = "text" name = "search">
      <button type = "submit"> Enter</button>
  </p></form>
 
