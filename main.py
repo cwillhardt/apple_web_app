@@ -119,41 +119,64 @@ def purchase_cart():
     if 'cart' in session and len(session['cart'])>0:
         name = str(request.form['account_name'])
         print("name: "+name)
-        # get their apple_id
-        cursor = db.cursor()
-        sql = "SELECT apple_id FROM apple_account WHERE name='"+name+"'"
-        cursor.execute(sql)
-        account_id = cursor.fetchone()[0]
-        print(account_id)
-
-        # insert into checkout
-        today = date.today()
-        today = today.strftime('%Y-%m-%d %H')
-        sql = "INSERT INTO checkout(date,payment_method,store_id,apple_id) "\
-              "VALUES ('"+today+"','Bitcoin',1,"+str(account_id)+")"
-        cursor.execute(sql)
-        db.commit()
-    
-        # get the checkout id
-        sql = "SELECT checkout_id FROM checkout WHERE apple_id="+str(account_id)+\
-              " ORDER BY checkout_id DESC LIMIT 1"
-        cursor.execute(sql)
-        checkout_id = cursor.fetchone()[0]
-        print(checkout_id)
-    
-        # insert models into product_purchases
-        for model in session['cart']:
-            # get the current cost
-            sql = "SELECT price FROM stock WHERE store_id=1 AND model_id="+str(model)
+        try:
+            db.begin()
+            cursor = db.cursor()
+            print('1')
+            # make sure items in stock, else raise exception and rollback
+            for model in session['cart']:
+                print('1')
+                sql = "SELECT count FROM stock WHERE store_id=1 AND model_id="+str(model)
+                cursor.execute(sql)
+                print('2')
+                count = cursor.fetchone()[0]
+                print('3')
+                if count < 1:
+                    raise Exception('Model out of stock. Purchase failed')
+                else:
+                    sql = "UPDATE stock SET count = count-1 WHERE store_id=1 AND model_id="+str(model);
+                    cursor.execute(sql)
+            print('2')
+            # get their apple_id
+            sql = "SELECT apple_id FROM apple_account WHERE name='"+name+"'"
             cursor.execute(sql)
-            cost = cursor.fetchone()[0]
-            sql = "INSERT INTO product_purchases(model_id,checkout_id,cost)"\
-                  " VALUES("+str(model)+","+str(checkout_id)+","+str(cost)+")"
+            account_id = cursor.fetchone()[0]
+            print(account_id)
+            print('3')
+            # get the checkout id
+            sql = "SELECT MAX(checkout_id) FROM checkout"
+            cursor.execute(sql)
+            checkout_id = cursor.fetchone()[0] + 1
+            print(checkout_id)
+            print('4')
+            # insert into checkout
+            today = date.today()
+            today = today.strftime('%Y-%m-%d %H')
+            sql = "INSERT INTO checkout(date,payment_method,store_id,apple_id) "\
+                  "VALUES ('"+today+"','Bitcoin',1,"+str(account_id)+")"
             cursor.execute(sql)
             db.commit()
-        models=get_cart()
-        session.pop('cart',None)
-        return render_template('purchase_successful.html',results=models)
+    
+            # insert models into product_purchases
+            for model in session['cart']:
+                # get the current cost
+                sql = "SELECT price FROM stock WHERE store_id=1 AND model_id="+str(model)
+                cursor.execute(sql)
+                cost = cursor.fetchone()[0]
+                sql = "INSERT INTO product_purchases(model_id,checkout_id,cost)"\
+                      " VALUES("+str(model)+","+str(checkout_id)+","+str(cost)+")"
+                cursor.execute(sql)
+                
+            db.commit()
+            models=get_cart()
+            session.pop('cart',None)
+            return render_template('purchase_successful.html',results=models)
+        except:
+            try:
+                db.rollback()
+                return render('purchase_fail')
+            except:
+                return render('purchase_fail')
     else:
         return render_template('cart.html')
 
