@@ -12,10 +12,26 @@ app.secret_key = 'secret_key'
 def home():
     return render_template('home.html')
 
-@app.route('/Mac')
+@app.route('/Mac',methods=['GET','POST'])
 def mac():
     cursor = db.cursor()
-    sql = "SELECT model_id,name,price, group_concat(configuration_specific) "\
+    button = request.form.get('sort')
+    if button == "sortlow":
+        sql = "SELECT model_id,name,price, group_concat(configuration_specific) "\
+          "FROM model_configurations NATURAL LEFT OUTER JOIN "\
+          "stock NATURAL LEFT OUTER JOIN model NATURAL LEFT OUTER JOIN "\
+          "product WHERE store_id=1 AND(name='iMac' OR name='Mac Mini' OR "\
+          "name='MacBook Pro' OR name='MacBook') GROUP BY model_id"\
+          " ORDER BY price ASC"
+    elif button == "sorthigh":
+        sql = "SELECT model_id,name,price, group_concat(configuration_specific) "\
+          "FROM model_configurations NATURAL LEFT OUTER JOIN "\
+          "stock NATURAL LEFT OUTER JOIN model NATURAL LEFT OUTER JOIN "\
+          "product WHERE store_id=1 AND(name='iMac' OR name='Mac Mini' OR "\
+          "name='MacBook Pro' OR name='MacBook') GROUP BY model_id"\
+          " ORDER BY price DESC"
+    else:
+        sql = "SELECT model_id,name,price, group_concat(configuration_specific) "\
           "FROM model_configurations NATURAL LEFT OUTER JOIN "\
           "stock NATURAL LEFT OUTER JOIN model NATURAL LEFT OUTER JOIN "\
           "product WHERE store_id=1 AND(name='iMac' OR name='Mac Mini' OR "\
@@ -24,10 +40,24 @@ def mac():
     results = cursor.fetchall()
     return render_template('mac.html', results=results)
 
-@app.route('/iPod')
-def ipad():
+@app.route('/iPod',methods=['GET','POST'])
+def ipod():
     cursor = db.cursor()
-    sql = "SELECT model_id,name,price, group_concat(configuration_specific) "\
+    button = request.form.get('sort')
+    if button == "sortlow":
+        sql = "SELECT model_id,name,price, group_concat(configuration_specific) "\
+          "FROM model_configurations NATURAL LEFT OUTER JOIN "\
+          "stock NATURAL LEFT OUTER JOIN model NATURAL LEFT OUTER JOIN "\
+          "product WHERE store_id=1 AND name='iPod' GROUP BY model_id"\
+          " ORDER BY price ASC"
+    elif button == "sorthigh":
+        sql = "SELECT model_id,name,price, group_concat(configuration_specific) "\
+          "FROM model_configurations NATURAL LEFT OUTER JOIN "\
+          "stock NATURAL LEFT OUTER JOIN model NATURAL LEFT OUTER JOIN "\
+          "product WHERE store_id=1 AND name='iPod' GROUP BY model_id"\
+          " ORDER BY price DESC"
+    else:
+        sql = "SELECT model_id,name,price, group_concat(configuration_specific) "\
           "FROM model_configurations NATURAL LEFT OUTER JOIN "\
           "stock NATURAL LEFT OUTER JOIN model NATURAL LEFT OUTER JOIN "\
           "product WHERE store_id=1 AND name='iPod' GROUP BY model_id"
@@ -35,22 +65,22 @@ def ipad():
     results = cursor.fetchall()
     return render_template('ipod.html',results=results)
 
-@app.route('/iPhone')
+@app.route('/iPhone',methods=['GET','POST'])
 def iphone():
     button = request.form.get('sort')
     cursor = db.cursor()
-    if button = 'sortlow':
+    if button == 'sortlow':
         sql = "SELECT model_id,name,price, group_concat(configuration_specific) "\
             "FROM model_configurations NATURAL LEFT OUTER JOIN "\
             "stock NATURAL LEFT OUTER JOIN model NATURAL LEFT OUTER JOIN "\
             "product WHERE store_id=1 AND name='iPhone' GROUP BY model_id"\
-            "order by price asc"
-    elif button = 'sorthigh':
+            " order by price asc"
+    elif button == 'sorthigh':
         sql = "SELECT model_id,name,price, group_concat(configuration_specific) "\
             "FROM model_configurations NATURAL LEFT OUTER JOIN "\
             "stock NATURAL LEFT OUTER JOIN model NATURAL LEFT OUTER JOIN "\
             "product WHERE store_id=1 AND name='iPhone' GROUP BY model_id"\
-            "order by price desc"        
+            " order by price desc"        
     else:
         sql = "SELECT model_id,name,price, group_concat(configuration_specific) "\
             "FROM model_configurations NATURAL LEFT OUTER JOIN "\
@@ -60,10 +90,24 @@ def iphone():
     results = cursor.fetchall()
     return render_template('iphone.html',results=results)
 
-@app.route('/Watch')
+@app.route('/Watch',methods=['GET','POST'])
 def watch():
     cursor = db.cursor()
-    sql = "SELECT model_id,name,price, group_concat(configuration_specific) "\
+    button = request.form.get('sort')
+    if button == "sortlow":
+        sql = "SELECT model_id,name,price, group_concat(configuration_specific) "\
+          "FROM model_configurations NATURAL LEFT OUTER JOIN "\
+          "stock NATURAL LEFT OUTER JOIN model NATURAL LEFT OUTER JOIN "\
+          "product WHERE store_id=1 AND name='Apple Watch' GROUP BY model_id"\
+          " ORDER BY price ASC"
+    elif button == "sorthigh":
+        sql = "SELECT model_id,name,price, group_concat(configuration_specific) "\
+          "FROM model_configurations NATURAL LEFT OUTER JOIN "\
+          "stock NATURAL LEFT OUTER JOIN model NATURAL LEFT OUTER JOIN "\
+          "product WHERE store_id=1 AND name='Apple Watch' GROUP BY model_id"\
+          " ORDER BY price DESC"
+    else:
+        sql = "SELECT model_id,name,price, group_concat(configuration_specific) "\
           "FROM model_configurations NATURAL LEFT OUTER JOIN "\
           "stock NATURAL LEFT OUTER JOIN model NATURAL LEFT OUTER JOIN "\
           "product WHERE store_id=1 AND name='Apple Watch' GROUP BY model_id"
@@ -79,10 +123,28 @@ def apps():
 def music():
     return render_template('home.html')
 
-@app.route('/Other')
+@app.route('/Other',methods=['GET','POST'])
 def other():
     cursor = db.cursor()
-    sql = "SELECT model_id,brand,name,price "\
+    button = request.form.get('sort')
+    if button == "sortlow":
+        sql = "SELECT model_id,brand,name,price "\
+          "FROM stock NATURAL LEFT OUTER JOIN model NATURAL LEFT OUTER JOIN "\
+          "product WHERE store_id=1 AND name<>'iPod' AND name<>'Apple Watch' AND name<>"\
+          "'MacBook' AND name<>'iMac' AND name<>'Mac Mini' AND "\
+          "name<>'MacBook Pro' AND name<>'iPhone' AND name<>'Apple Watch'"\
+          " GROUP BY model_id"\
+          " ORDER BY price ASC"
+    elif button == "sorthigh":
+        sql = "SELECT model_id,brand,name,price "\
+          "FROM stock NATURAL LEFT OUTER JOIN model NATURAL LEFT OUTER JOIN "\
+          "product WHERE store_id=1 AND name<>'iPod' AND name<>'Apple Watch' AND name<>"\
+          "'MacBook' AND name<>'iMac' AND name<>'Mac Mini' AND "\
+          "name<>'MacBook Pro' AND name<>'iPhone' AND name<>'Apple Watch'"\
+          " GROUP BY model_id"\
+          " ORDER BY price DESC"
+    else:
+        sql = "SELECT model_id,brand,name,price "\
           "FROM stock NATURAL LEFT OUTER JOIN model NATURAL LEFT OUTER JOIN "\
           "product WHERE store_id=1 AND name<>'iPod' AND name<>'Apple Watch' AND name<>"\
           "'MacBook' AND name<>'iMac' AND name<>'Mac Mini' AND "\
