@@ -3,6 +3,10 @@
 {% endblock %}
 {% block content %}
   <p class="important">
+    <form action = "{{ url_for('iphone.html') }}" method = "POST">
+      <button type="submit" name='sort' value="sortlow" formmethod="post"> Sort by Lowest Price </button>
+      <button type="submit" name='sort' value="sorthigh" formmethod="post"> Sort by Highest Price </button>
+      </form>
     <table class="styled-table">
 	<tr>
 	  <th scope="col">Model ID</th>

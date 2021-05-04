@@ -37,11 +37,25 @@ def ipad():
 
 @app.route('/iPhone')
 def iphone():
+    button = request.form.get('sort')
     cursor = db.cursor()
-    sql = "SELECT model_id,name,price, group_concat(configuration_specific) "\
-          "FROM model_configurations NATURAL LEFT OUTER JOIN "\
-          "stock NATURAL LEFT OUTER JOIN model NATURAL LEFT OUTER JOIN "\
-          "product WHERE store_id=1 AND name='iPhone' GROUP BY model_id"
+    if button = 'sortlow':
+        sql = "SELECT model_id,name,price, group_concat(configuration_specific) "\
+            "FROM model_configurations NATURAL LEFT OUTER JOIN "\
+            "stock NATURAL LEFT OUTER JOIN model NATURAL LEFT OUTER JOIN "\
+            "product WHERE store_id=1 AND name='iPhone' GROUP BY model_id"\
+            "order by price asc"
+    elif button = 'sorthigh':
+        sql = "SELECT model_id,name,price, group_concat(configuration_specific) "\
+            "FROM model_configurations NATURAL LEFT OUTER JOIN "\
+            "stock NATURAL LEFT OUTER JOIN model NATURAL LEFT OUTER JOIN "\
+            "product WHERE store_id=1 AND name='iPhone' GROUP BY model_id"\
+            "order by price desc"        
+    else:
+        sql = "SELECT model_id,name,price, group_concat(configuration_specific) "\
+            "FROM model_configurations NATURAL LEFT OUTER JOIN "\
+            "stock NATURAL LEFT OUTER JOIN model NATURAL LEFT OUTER JOIN "\
+            "product WHERE store_id=1 AND name='iPhone' GROUP BY model_id"
     cursor.execute(sql)
     results = cursor.fetchall()
     return render_template('iphone.html',results=results)
@@ -231,7 +245,13 @@ def search_result():
           " JOIN product NATURAL LEFT OUTER JOIN configurables WHERE store_id=1 AND configuration_id"\
           " is NULL GROUP BY model_id ORDER BY model_id) as x WHERE name like"
     search_text = str(request.form['search'])
-    sql = sql + " '%" + search_text + "%'"
+    words = search_text.split()
+    sql = sql + " '%" + words[0] + "%'" 
+    for i in words:
+        if i != words[0]:
+            sql =  sql + "and name like " + "'%" + i + "%'" 
+        else:
+            pass
     cursor.execute(sql)
     results = cursor.fetchall()
     return render_template('search_result.html',results = results)
