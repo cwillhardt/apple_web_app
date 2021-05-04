@@ -6,6 +6,9 @@ from datetime import date
 from multiprocessing import Process
 import time
 
+db = mysql.connect(host="localhost",user="root",
+                   password="password", database="Enterprise",autocommit=False)
+
 # run same transaction at the same time to check for concurrency
 def test_transaction(count):
     p1 = Process(target=transaction,args=(1,))
@@ -15,17 +18,16 @@ def test_transaction(count):
 
 # just uses model_id=1 and account Colton Willhardt
 def transaction(thread=1):
-    db = mysql.connect(host="localhost",user="root",
-                   password="password", database="Enterprise")
-    print(str(thread)+str(time.ctime(time.time())))
+    
+    print(str(thread)+' '+str(time.ctime(time.time())))
     name = "Colton Willhardt"
     print("name: "+name)
     try:
         db.begin()
         cursor = db.cursor()
             
-        # make sure items in stock, else raise exception and rollback        
-        sql = "SELECT count FROM stock WHERE store_id=1 AND model_id=1"
+        # make sure items in stock, else raise exception and rollback
+        sql = "SELECT count FROM stock WHERE store_id=1 AND model_id=1 FOR UPDATE"
         cursor.execute(sql)
         count = cursor.fetchone()[0]
         print("count: "+str(count))
@@ -71,7 +73,6 @@ def transaction(thread=1):
 
 if __name__=="__main__":
     test_transaction(3)
-    #transaction(1)
 
 
     

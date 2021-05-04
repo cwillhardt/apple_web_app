@@ -201,7 +201,7 @@ def purchase_cart():
             
             # make sure items in stock, else raise exception and rollback
             for model in session['cart']:
-                sql = "SELECT count FROM stock WHERE store_id=1 AND model_id="+str(model)
+                sql = "SELECT count FROM stock WHERE store_id=1 AND model_id="+str(model)+" FOR UPDATE"
                 cursor.execute(sql)
                 count = cursor.fetchone()[0]
                 if count < 1:
@@ -259,7 +259,7 @@ def purchase_cart_guest():
             
             # make sure items in stock, else raise exception and rollback
             for model in session['cart']:
-                sql = "SELECT count FROM stock WHERE store_id=1 AND model_id="+str(model)
+                sql = "SELECT count FROM stock WHERE store_id=1 AND model_id="+str(model)+" FOR UPDATE"
                 cursor.execute(sql)
                 count = cursor.fetchone()[0]
                 if count < 1:
