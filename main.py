@@ -20,21 +20,21 @@ def mac():
         sql = "SELECT model_id,name,price, group_concat(configuration_specific) "\
           "FROM model_configurations NATURAL LEFT OUTER JOIN "\
           "stock NATURAL LEFT OUTER JOIN model NATURAL LEFT OUTER JOIN "\
-          "product WHERE store_id=1 AND(name='iMac' OR name='Mac Mini' OR "\
+          "product WHERE store_id=1 AND count > 0 AND(name='iMac' OR name='Mac Mini' OR "\
           "name='MacBook Pro' OR name='MacBook') GROUP BY model_id"\
           " ORDER BY price ASC"
     elif button == "sorthigh":
         sql = "SELECT model_id,name,price, group_concat(configuration_specific) "\
           "FROM model_configurations NATURAL LEFT OUTER JOIN "\
           "stock NATURAL LEFT OUTER JOIN model NATURAL LEFT OUTER JOIN "\
-          "product WHERE store_id=1 AND(name='iMac' OR name='Mac Mini' OR "\
+          "product WHERE store_id=1 AND count > 0 AND(name='iMac' OR name='Mac Mini' OR "\
           "name='MacBook Pro' OR name='MacBook') GROUP BY model_id"\
           " ORDER BY price DESC"
     else:
         sql = "SELECT model_id,name,price, group_concat(configuration_specific) "\
           "FROM model_configurations NATURAL LEFT OUTER JOIN "\
           "stock NATURAL LEFT OUTER JOIN model NATURAL LEFT OUTER JOIN "\
-          "product WHERE store_id=1 AND(name='iMac' OR name='Mac Mini' OR "\
+          "product WHERE store_id=1 AND count > 0 AND(name='iMac' OR name='Mac Mini' OR "\
           "name='MacBook Pro' OR name='MacBook') GROUP BY model_id"
     cursor.execute(sql)
     results = cursor.fetchall()
@@ -48,19 +48,19 @@ def ipod():
         sql = "SELECT model_id,name,price, group_concat(configuration_specific) "\
           "FROM model_configurations NATURAL LEFT OUTER JOIN "\
           "stock NATURAL LEFT OUTER JOIN model NATURAL LEFT OUTER JOIN "\
-          "product WHERE store_id=1 AND name='iPod' GROUP BY model_id"\
+          "product WHERE store_id=1 AND count > 0 AND name='iPod' GROUP BY model_id"\
           " ORDER BY price ASC"
     elif button == "sorthigh":
         sql = "SELECT model_id,name,price, group_concat(configuration_specific) "\
           "FROM model_configurations NATURAL LEFT OUTER JOIN "\
           "stock NATURAL LEFT OUTER JOIN model NATURAL LEFT OUTER JOIN "\
-          "product WHERE store_id=1 AND name='iPod' GROUP BY model_id"\
+          "product WHERE store_id=1 AND count > 0 AND name='iPod' GROUP BY model_id"\
           " ORDER BY price DESC"
     else:
         sql = "SELECT model_id,name,price, group_concat(configuration_specific) "\
           "FROM model_configurations NATURAL LEFT OUTER JOIN "\
           "stock NATURAL LEFT OUTER JOIN model NATURAL LEFT OUTER JOIN "\
-          "product WHERE store_id=1 AND name='iPod' GROUP BY model_id"
+          "product WHERE store_id=1 AND count > 0 AND name='iPod' GROUP BY model_id"
     cursor.execute(sql)
     results = cursor.fetchall()
     return render_template('ipod.html',results=results)
@@ -73,19 +73,19 @@ def iphone():
         sql = "SELECT model_id,name,price, group_concat(configuration_specific) "\
             "FROM model_configurations NATURAL LEFT OUTER JOIN "\
             "stock NATURAL LEFT OUTER JOIN model NATURAL LEFT OUTER JOIN "\
-            "product WHERE store_id=1 AND name='iPhone' GROUP BY model_id"\
+            "product WHERE store_id=1 AND count > 0 AND name='iPhone' GROUP BY model_id"\
             " order by price asc"
     elif button == 'sorthigh':
         sql = "SELECT model_id,name,price, group_concat(configuration_specific) "\
             "FROM model_configurations NATURAL LEFT OUTER JOIN "\
             "stock NATURAL LEFT OUTER JOIN model NATURAL LEFT OUTER JOIN "\
-            "product WHERE store_id=1 AND name='iPhone' GROUP BY model_id"\
+            "product WHERE store_id=1 AND count > 0 AND name='iPhone' GROUP BY model_id"\
             " order by price desc"        
     else:
         sql = "SELECT model_id,name,price, group_concat(configuration_specific) "\
             "FROM model_configurations NATURAL LEFT OUTER JOIN "\
             "stock NATURAL LEFT OUTER JOIN model NATURAL LEFT OUTER JOIN "\
-            "product WHERE store_id=1 AND name='iPhone' GROUP BY model_id"
+            "product WHERE store_id=1 AND count > 0 AND name='iPhone' GROUP BY model_id"
     cursor.execute(sql)
     results = cursor.fetchall()
     return render_template('iphone.html',results=results)
@@ -98,19 +98,19 @@ def watch():
         sql = "SELECT model_id,name,price, group_concat(configuration_specific) "\
           "FROM model_configurations NATURAL LEFT OUTER JOIN "\
           "stock NATURAL LEFT OUTER JOIN model NATURAL LEFT OUTER JOIN "\
-          "product WHERE store_id=1 AND name='Apple Watch' GROUP BY model_id"\
+          "product WHERE store_id=1 AND count > 0 AND name='Apple Watch' GROUP BY model_id"\
           " ORDER BY price ASC"
     elif button == "sorthigh":
         sql = "SELECT model_id,name,price, group_concat(configuration_specific) "\
           "FROM model_configurations NATURAL LEFT OUTER JOIN "\
           "stock NATURAL LEFT OUTER JOIN model NATURAL LEFT OUTER JOIN "\
-          "product WHERE store_id=1 AND name='Apple Watch' GROUP BY model_id"\
+          "product WHERE store_id=1 AND count > 0 AND name='Apple Watch' GROUP BY model_id"\
           " ORDER BY price DESC"
     else:
         sql = "SELECT model_id,name,price, group_concat(configuration_specific) "\
           "FROM model_configurations NATURAL LEFT OUTER JOIN "\
           "stock NATURAL LEFT OUTER JOIN model NATURAL LEFT OUTER JOIN "\
-          "product WHERE store_id=1 AND name='Apple Watch' GROUP BY model_id"
+          "product WHERE store_id=1 AND count > 0 AND name='Apple Watch' GROUP BY model_id"
     cursor.execute(sql)
     results = cursor.fetchall()
     return render_template('watch.html',results=results)
@@ -130,7 +130,7 @@ def other():
     if button == "sortlow":
         sql = "SELECT model_id,brand,name,price "\
           "FROM stock NATURAL LEFT OUTER JOIN model NATURAL LEFT OUTER JOIN "\
-          "product WHERE store_id=1 AND name<>'iPod' AND name<>'Apple Watch' AND name<>"\
+          "product WHERE store_id=1 AND count > 0 AND name<>'iPod' AND name<>'Apple Watch' AND name<>"\
           "'MacBook' AND name<>'iMac' AND name<>'Mac Mini' AND "\
           "name<>'MacBook Pro' AND name<>'iPhone' AND name<>'Apple Watch'"\
           " GROUP BY model_id"\
@@ -138,7 +138,7 @@ def other():
     elif button == "sorthigh":
         sql = "SELECT model_id,brand,name,price "\
           "FROM stock NATURAL LEFT OUTER JOIN model NATURAL LEFT OUTER JOIN "\
-          "product WHERE store_id=1 AND name<>'iPod' AND name<>'Apple Watch' AND name<>"\
+          "product WHERE store_id=1 AND count > 0 AND name<>'iPod' AND name<>'Apple Watch' AND name<>"\
           "'MacBook' AND name<>'iMac' AND name<>'Mac Mini' AND "\
           "name<>'MacBook Pro' AND name<>'iPhone' AND name<>'Apple Watch'"\
           " GROUP BY model_id"\
@@ -146,7 +146,7 @@ def other():
     else:
         sql = "SELECT model_id,brand,name,price "\
           "FROM stock NATURAL LEFT OUTER JOIN model NATURAL LEFT OUTER JOIN "\
-          "product WHERE store_id=1 AND name<>'iPod' AND name<>'Apple Watch' AND name<>"\
+          "product WHERE store_id=1 AND count > 0 AND name<>'iPod' AND name<>'Apple Watch' AND name<>"\
           "'MacBook' AND name<>'iMac' AND name<>'Mac Mini' AND "\
           "name<>'MacBook Pro' AND name<>'iPhone' AND name<>'Apple Watch'"\
           " GROUP BY model_id"
@@ -198,18 +198,17 @@ def purchase_cart():
         try:
             db.begin()
             cursor = db.cursor()
-            
             # make sure items in stock, else raise exception and rollback
             for model in session['cart']:
                 sql = "SELECT count FROM stock WHERE store_id=1 AND model_id="+str(model)+" FOR UPDATE"
                 cursor.execute(sql)
                 count = cursor.fetchone()[0]
                 if count < 1:
+                    print('out of stock: '+str(model))
                     raise Exception('Model out of stock. Purchase failed')
                 else:
                     sql = "UPDATE stock SET count = count-1 WHERE store_id=1 AND model_id="+str(model);
-                    cursor.execute(sql)
-                    
+                    cursor.execute(sql)       
             # get their apple_id
             sql = "SELECT apple_id FROM apple_account WHERE name='"+name+"'"
             cursor.execute(sql)
@@ -243,9 +242,9 @@ def purchase_cart():
         except:
             try:
                 db.rollback()
-                return render('purchase_fail')
+                return render_template('purchase_fail.html')
             except:
-                return render('purchase_fail')
+                return render_template('purchase_fail.html')
     else:
         return render_template('cart.html')
 
@@ -295,9 +294,9 @@ def purchase_cart_guest():
         except:
             try:
                 db.rollback()
-                return render('purchase_fail')
+                return render_template('purchase_fail.html')
             except:
-                return render('purchase_fail')
+                return render_template('purchase_fail.html')
     else:
         return render_template('cart.html')
                                
@@ -310,7 +309,7 @@ def search_result():
     cursor = db.cursor()
     sql = "SELECT * FROM (SELECT model_id,CONCAT(name,' ',group_concat(configuration_specific))"\
           " as name,price FROM model_configurations NATURAL LEFT OUTER JOIN stock NATURAL LEFT OUTER"\
-          " JOIN model NATURAL LEFT OUTER JOIN product WHERE store_id=1 GROUP BY model_id UNION"\
+          " JOIN model NATURAL LEFT OUTER JOIN product WHERE store_id=1 AND count > 0 GROUP BY model_id UNION"\
           " SELECT model_id,name,price FROM stock NATURAL LEFT OUTER JOIN model NATURAL LEFT OUTER"\
           " JOIN product NATURAL LEFT OUTER JOIN configurables WHERE store_id=1 AND configuration_id"\
           " is NULL GROUP BY model_id ORDER BY model_id) as x WHERE name like"
